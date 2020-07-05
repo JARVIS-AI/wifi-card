@@ -1,56 +1,60 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import QRCode from 'qrcode.react';
 import './style.css';
 
-class Card extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {ssid: '', password: '', qrvalue: ''};
-    this.handleSSIDChange = this.handleSSIDChange.bind(this);
-    this.handlePasswordChange= this.handlePasswordChange.bind(this);
+const Card = () => {
+  const [ssid, setSsid] = useState('');
+  const [password, setPassword] = useState('');
+  const [qrvalue, setQrvalue] = useState('');
+
+  const escape = (v) => {
+    const needsEscape = ['"', ';', ',', ':', '\\'];
+    
+    let escaped = '';
+    for (let i = 0; i < v.length; i++) {
+      let c = v[i];
+      if (needsEscape.includes(c)) {
+        c = '\\' + c;
+      }
+      escaped += c;
+    }
+
+    return escaped;
   }
 
-  handleSSIDChange(event) {
-    this.setState({ssid: event.target.value}, () => this.generateqr());
-  }
+  useEffect(() => {
+    let _ssid = escape(ssid),
+        _password = escape(password);
 
-  handlePasswordChange(event) {
-    this.setState({password: event.target.value}, () => this.generateqr());
-  }
+    setQrvalue(`WIFI:T:WPA;S:${_ssid};P:${_password};;`);
+  }, [ssid, password]);
 
-  generateqr() {
-    const qrcode = `WIFI:T:WPA;S:${this.state.ssid};P:${this.state.password};;`
-    this.setState({qrvalue: qrcode});
-  }
+  return (
+    <div>
+      <fieldset id="print-area">
+        <legend></legend>
 
-  render() {
-    return (
-      <div>
-        <fieldset id="print-area">
-          <legend></legend>
+        <h1>WiFi Login</h1>
+        <hr/>
 
-          <h1>WiFi Login</h1>
-          <hr/>
+        <div className="details">
+          <QRCode className="qrcode" value={qrvalue} size={175} />
 
-          <div className="details">
-            <QRCode className="qrcode" value={this.state.qrvalue} size={175} />
-
-            <div className="text">
-              <label>Network name</label>
-              <input id="ssid" type="text" maxlength="32" placeholder="Enter your WiFi Network" value={this.state.ssid} onChange={this.handleSSIDChange}/>
-              <label>Password</label>
-              <input id="password" type="text" maxlength="64" placeholder="password" value={this.state.password} onChange={this.handlePasswordChange}/>
-            </div>
+          <div className="text">
+            <label>Network name</label>
+            <input id="ssid" type="text" maxLength="32" placeholder="WiFi Network name" value={ssid} onChange={event => setSsid(event.target.value)} />
+            <label>Password</label>
+            <input id="password" type="text" maxLength="64" placeholder="Password" value={password} onChange={event => setPassword(event.target.value)} />
           </div>
-
-          <p><span role="img" aria-label="mobile-phone">📸📱</span>Point your phone's camera at the QR Code to connect automatically</p>
-        </fieldset>
-        <div className="print-btn">
-          <button onClick={window.print}>Print</button>
         </div>
+
+        <p><span role="img" aria-label="mobile-phone">📸📱</span>Point your phone's camera at the QR Code to connect automatically</p>
+      </fieldset>
+      <div className="print-btn">
+        <button onClick={window.print}>Print</button>
       </div>
-    )
-  }
+    </div>
+  )
 }
 
 export default Card;

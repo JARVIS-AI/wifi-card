@@ -1,22 +1,26 @@
 [![CircleCI](https://circleci.com/gh/bndw/wifi-card.svg?style=svg)](https://circleci.com/gh/bndw/wifi-card)
 
-# WiFi Card
+# 📶  WiFi Card
 
-Print a neat little card with your WiFi info and stick it on the fridge.
+Print a simple card with your WiFi login details. Tape it to the fridge, keep it in your wallet, etc.
 
-It looks like this:
-
-<img width=400 src="https://user-images.githubusercontent.com/4248167/83356910-05361c00-a31e-11ea-8735-95852b82ddcf.png">
+<img  src="https://user-images.githubusercontent.com/4248167/85215325-d95df300-b32b-11ea-9c97-40464c1acc1e.gif">
 
 ## Running locally
 
 Run the latest Docker image on http://localhost:8080
 
 ```
-docker run --rm -p 8080:80 bndw/wifi-card:latest
+make run
 ```
 
-Or run the live-reload server on http://localhost:8080
+Build the Docker image
+
+```
+make build
+```
+
+Run the live-reload server on http://localhost:8080
 
 ```
 make dev

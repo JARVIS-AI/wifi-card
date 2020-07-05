@@ -7,15 +7,15 @@ all: dev
 
 .PHONY: build
 build:
-	yarn build
 	docker build -t $(TAG_LATEST) .
 
 .PHONY: dev
 dev:
+	yarn
 	yarn start
 
 .PHONY: run
-run: build
+run:
 	docker run --rm -p 8080:80 $(TAG_LATEST)
 
 .PHONY: publish
